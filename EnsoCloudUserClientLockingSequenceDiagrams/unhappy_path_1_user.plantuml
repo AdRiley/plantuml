@@ -1,0 +1,45 @@
+@startuml
+
+!include style.plantuml
+
+participant "<img:user_a.png{scale=0.1}>" as UserA
+participant "<img:server.png{scale=0.1}>" as Server
+
+actor UserA
+entity Server
+
+UserA -> Server : Request Project Lock
+Server --> UserA : Lock aquired and returned
+
+UserA -> Server : Request Project File
+Server -> Server : Unzip Project from database
+Server --> UserA : Return Project File to User
+
+UserA -> UserA : Make changes to\ndocumentation
+UserA -> Server : Save Documentation
+Server -> Server : Zip and save to database
+Server --> UserA : Acknowledge successful save
+
+note over UserA : loses internet
+
+UserA -> UserA : Make changes to\ndocumentation
+
+UserA ->X Server : Are you there?
+activate UserA
+note over Server : stops receiving pings from User A
+note over UserA : Front-end realises\nlost connection\n & blocks editing
+
+UserA -> Server : Are you there?
+deactivate UserA
+note over UserA : regains internet
+note over Server : OK because X minutes did not elapse\nUser A still has lock
+Server --> UserA : Yes all good
+
+UserA -> Server : Save Documentation
+Server -> Server : Zip and save to database
+Server --> UserA : Acknowledge successful save
+
+UserA -> Server : Release Project Lock
+Server --> UserA : Acknowledge lock released
+
+@enduml
