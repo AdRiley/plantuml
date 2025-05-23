@@ -1,0 +1,36 @@
+@startuml
+
+!include style.plantuml
+ß
+participant "<img:user_a.png{scale=0.1}>" as UserA
+participant "<img:server.png{scale=0.1}>" as Server
+participant "<img:user_b.png{scale=0.1}>" as UserB
+
+actor UserA
+entity Server
+actor UserB
+
+UserA -> Server : Request Project Lock
+Server --> UserA : Lock aquired and returned
+
+UserA -> Server : Request Project File
+Server -> Server : Unzip Project from\ndatabase
+Server --> UserA : Return Project File to User
+
+UserA -> UserA : Make changes to\ndocumentation
+UserA -> Server : Save Documentation
+Server -> Server : Zip and save to\ndatabase
+Server --> UserA : Acknowledge successful save
+
+UserB -[#blue]> Server : Request Project Lock
+Server -[#blue]-> UserB : Denied - project already\nbeen edited by User A
+
+UserA -> UserA : Make changes to\ndocumentation
+UserA -> Server : Save Documentation
+Server -> Server : Zip and save to\ndatabase
+Server --> UserA : Acknowledge successful save
+
+UserA -> Server : Release Project Lock
+Server --> UserA : Acknowledge lock released
+
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+
+!include style.plantuml
+
+participant "<img:user_a.png{scale=0.1}>" as UserA
+participant "<img:server.png{scale=0.1}>" as Server
+
+actor UserA
+entity Server
+
+UserA -> Server : Request Project Lock
+Server --> UserA : Lock aquired and returned
+
+UserA -> Server : Request Project File
+Server -> Server : Unzip Project from database
+Server --> UserA : Return Project File to User
+
+UserA -> UserA : Make changes to\ndocumentation
+UserA -> Server : Save Documentation
+Server -> Server : Zip and save to database
+Server --> UserA : Acknowledge successful save
+
+UserA -> UserA : Make changes to\ndocumentation
+UserA -> Server : Save Documentation
+Server -> Server : Zip and save to database
+Server --> UserA : Acknowledge successful save
+
+UserA -> Server : Release Project Lock
+Server --> UserA : Acknowledge lock released
+
+@enduml
