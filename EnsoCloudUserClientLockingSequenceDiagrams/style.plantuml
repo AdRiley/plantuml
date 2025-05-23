@@ -1,0 +1,18 @@
+' Use handwritten-style skin
+skinparam handwritten true
+
+' Brighter background and components
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam roundcorner 20
+skinparam Participant {
+  BorderColor #f57f17
+  FontColor black
+  FontSize 16
+  FontName Comic Sans MS
+}
+skinparam SequenceArrow {
+  FontSize 14
+  Thickness 2
+  FontName Comic Sans MS
+}
